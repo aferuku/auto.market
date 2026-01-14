@@ -3,132 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <title>Auto Market</title>
+
 <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f2f2f2;
-}
-header {
-    background: #111;
-    color: white;
-    text-align: center;
-    padding: 20px;
-}
-.brands {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    background: white;
-}
-.brands img {
-    width: 80px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-.brands img:hover {
-    transform: scale(1.1);
-}
-.cars {
-    display: none;
-    padding: 20px;
-}
-.cars.active {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+body { font-family: Arial; margin:0; background:#f2f2f2 }
+header { background:#111; color:#fff; padding:20px; text-align:center }
+.brands button { margin:5px; padding:10px 20px; cursor:pointer }
+.cars { display:flex; flex-wrap:wrap; justify-content:center }
 .car {
-    background: white;
-    width: 280px;
-    margin: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background:#fff; width:260px; margin:10px;
+    border-radius:6px; box-shadow:0 0 8px rgba(0,0,0,.1)
 }
-.car img {
-    width: 100%;
-    height: 170px;
-    object-fit: cover;
-}
-.car-info {
-    padding: 15px;
-}
-.price {
-    color: green;
-    font-weight: bold;
-}
+.car img { width:100%; height:160px; object-fit:cover }
+.car-info { padding:10px }
+.price { color:green; font-weight:bold }
+.admin { background:#fff; padding:15px; margin:15px; display:none }
+input, select { margin:5px; padding:6px }
 </style>
 
-<script>
-function showBrand(brand) {
-    document.querySelectorAll('.cars').forEach(div => {
-        div.classList.remove('active');
-    });
-    document.getElementById(brand).classList.add('active');
-}
-</script>
 </head>
-
 <body>
 
 <header>
-    <h1>Auto Market</h1>
-    <p>Zgjidh markën e makinës</p>
+<h1>Auto Market</h1>
+<p>Shitje makinash</p>
+<button onclick="adminLogin()">ADMIN</button>
 </header>
 
-<!-- LOGOT -->
-<div class="brands">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Audi_Logo.svg" onclick="showBrand('audi')" alt="Audi">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" onclick="showBrand('bmw')" alt="BMW">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg" onclick="showBrand('mercedes')" alt="Mercedes">
+<!-- MARKAT -->
+<div class="brands" style="text-align:center">
+<button onclick="showBrand('Audi')">Audi</button>
+<button onclick="showBrand('BMW')">BMW</button>
+<button onclick="showBrand('Mercedes')">Mercedes</button>
 </div>
 
-<!-- AUDI -->
-<div class="cars active" id="audi">
-    <div class="car">
-        <img src="https://images.unsplash.com/photo-1617814076231-0d1a3a89ce11">
-        <div class="car-info">
-            <h3>Audi A4</h3>
-            <p>2020 • Benzinë</p>
-            <p class="price">18,000 €</p>
-        </div>
-    </div>
+<!-- MAKINAT -->
+<div id="cars" class="cars"></div>
 
-    <div class="car">
-        <img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a">
-        <div class="car-info">
-            <h3>Audi RS6</h3>
-            <p>2022 • Benzinë</p>
-            <p class="price">85,000 €</p>
-        </div>
-    </div>
+<!-- ADMIN PANEL -->
+<div class="admin" id="admin">
+<h3>Admin Panel – Shto Makinë</h3>
+
+<select id="brand">
+<option>Audi</option>
+<option>BMW</option>
+<option>Mercedes</option>
+</select><br>
+
+<input id="model" placeholder="Modeli"><br>
+<input id="price" placeholder="Çmimi"><br>
+<input id="image" placeholder="Link i fotos"><br>
+
+<button onclick="addCar()">Shto Makinë</button>
+<button onclick="logout()">Dil</button>
 </div>
 
-<!-- BMW -->
-<div class="cars" id="bmw">
-    <div class="car">
-        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442">
-        <div class="car-info">
-            <h3>BMW Serie 3</h3>
-            <p>2019 • Naftë</p>
-            <p class="price">20,000 €</p>
-        </div>
-    </div>
-</div>
+<script>
+/* 🔐 PASSWORD ADMIN (I FUTUR SIÇ E KËRKOVE) */
+const ADMIN_PASSWORD = "Iksetqr2468";
 
-<!-- MERCEDES -->
-<div class="cars" id="mercedes">
-    <div class="car">
-        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70">
-        <div class="car-info">
-            <h3>Mercedes C Class</h3>
-            <p>2021 • Naftë</p>
-            <p class="price">24,000 €</p>
-        </div>
-    </div>
-</div>
+let cars = JSON.parse(localStorage.getItem("cars")) || [
+ {brand:"Audi", model:"A4", price:"18000 €", image:"https://via.placeholder.com/300"},
+ {brand:"Audi", model:"RS6", price:"85000 €", image:"https://via.placeholder.com/300"},
+ {brand:"BMW", model:"M3", price:"70000 €", image:"https://via.placeholder.com/300"}
+];
+
+let currentBrand = "Audi";
+let adminLogged = false;
+
+function save() {
+ localStorage.setItem("cars", JSON.stringify(cars));
+}
+
+function showBrand(brand) {
+ currentBrand = brand;
+ render();
+}
+
+function render() {
+ const box = document.getElementById("cars");
+ box.innerHTML = "";
+ cars.filter(c=>c.brand===currentBrand).forEach((c,i)=>{
+   box.innerHTML += `
+   <div class="car">
+     <img src="${c.image}">
+     <div class="car-info">
+       <h4>${c.brand} ${c.model}</h4>
+       <p class="price">${c.price}</p>
+       ${adminLogged ? `<button onclick="removeCar(${i})">Fshi</button>` : ``}
+     </div>
+   </div>`;
+ });
+}
+
+function addCar() {
+ cars.push({
+   brand:brand.value,
+   model:model.value,
+   price:price.value,
+   image:image.value
+ });
+ save();
+ render();
+ alert("Makina u shtua");
+}
+
+function removeCar(i) {
+ cars.splice(i,1);
+ save();
+ render();
+}
+
+function adminLogin() {
+ const p = prompt("Shkruaj password-in e adminit:");
+ if (p === ADMIN_PASSWORD) {
+   adminLogged = true;
+   document.getElementById("admin").style.display = "block";
+   render();
+ } else {
+   alert("Password gabim");
+ }
+}
+
+function logout() {
+ adminLogged = false;
+ document.getElementById("admin").style.display = "none";
+ render();
+}
+
+render();
+</script>
 
 </body>
 </html>
