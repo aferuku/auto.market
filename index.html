@@ -5,143 +5,141 @@
 <title>Auto Market</title>
 
 <style>
-body { font-family: Arial; margin:0; background:#f2f2f2 }
-header { background:#111; color:#fff; padding:20px; text-align:center }
-.brands button { margin:5px; padding:10px 20px; cursor:pointer }
-.cars { display:flex; flex-wrap:wrap; justify-content:center }
+body {font-family:Arial;margin:0;background:#f2f2f2}
+header {background:#111;color:#fff;padding:20px;text-align:center}
+.brands button {margin:4px;padding:8px 14px;cursor:pointer}
+.cars {display:flex;flex-wrap:wrap;justify-content:center}
 .car {
-    background:#fff; width:260px; margin:10px;
-    border-radius:6px; box-shadow:0 0 8px rgba(0,0,0,.1)
+  background:#fff;width:240px;margin:8px;
+  border-radius:6px;box-shadow:0 0 6px rgba(0,0,0,.1)
 }
-.car img { width:100%; height:160px; object-fit:cover }
-.car-info { padding:10px }
-.price { color:green; font-weight:bold }
-.admin { background:#fff; padding:15px; margin:15px; display:none }
-input, select { margin:5px; padding:6px }
+.car img {width:100%;height:140px;object-fit:cover}
+.car-info {padding:8px;text-align:center}
+.price {color:green;font-weight:bold}
+footer {background:#111;color:#fff;text-align:center;padding:15px;margin-top:20px}
 </style>
-
 </head>
+
 <body>
 
 <header>
 <h1>Auto Market</h1>
-<p>Shitje makinash</p>
-<button onclick="adminLogin()">ADMIN</button>
+<p>Modele reale • të shkruara një-ka-një</p>
 </header>
 
-<!-- MARKAT -->
-<div class="brands" style="text-align:center">
-<button onclick="showBrand('Audi')">Audi</button>
-<button onclick="showBrand('BMW')">BMW</button>
-<button onclick="showBrand('Mercedes')">Mercedes</button>
-</div>
+<div class="brands" id="brands" style="text-align:center"></div>
+<div class="cars" id="cars"></div>
 
-<!-- MAKINAT -->
-<div id="cars" class="cars"></div>
-
-<!-- ADMIN PANEL -->
-<div class="admin" id="admin">
-<h3>Admin Panel – Shto Makinë</h3>
-
-<select id="brand">
-<option>Audi</option>
-<option>BMW</option>
-<option>Mercedes</option>
-</select><br>
-
-<input id="model" placeholder="Modeli"><br>
-<input id="price" placeholder="Çmimi"><br>
-<input id="image" placeholder="Link i fotos"><br>
-
-<button onclick="addCar()">Shto Makinë</button>
-<button onclick="logout()">Dil</button>
-</div>
+<footer>
+© 2026 Auto Market. Të gjitha të drejtat e rezervuara.
+</footer>
 
 <script>
-/* 🔐 PASSWORD ADMIN (I FUTUR SIÇ E KËRKOVE) */
-const ADMIN_PASSWORD = "Iksetqr2468";
+const data = {
+  "Audi": [
+    "Audi A1","Audi A3","Audi A4","Audi A5","Audi A6","Audi A7","Audi A8",
+    "Audi Q2","Audi Q3","Audi Q5","Audi Q7","Audi Q8",
+    "Audi TT","Audi R8",
+    "Audi RS3","Audi RS4","Audi RS5","Audi RS6","Audi RS7",
+    "Audi e-tron","Audi e-tron GT"
+  ],
 
-let cars = JSON.parse(localStorage.getItem("cars")) || [
- {brand:"Audi", model:"A4", price:"18000 €", image:"https://via.placeholder.com/300"},
- {brand:"Audi", model:"RS6", price:"85000 €", image:"https://via.placeholder.com/300"},
- {brand:"BMW", model:"M3", price:"70000 €", image:"https://via.placeholder.com/300"}
-];
+  "BMW": [
+    "BMW 1 Series","BMW 2 Series","BMW 3 Series","BMW 4 Series",
+    "BMW 5 Series","BMW 6 Series","BMW 7 Series","BMW 8 Series",
+    "BMW X1","BMW X2","BMW X3","BMW X4","BMW X5","BMW X6","BMW X7",
+    "BMW Z4","BMW i3","BMW i4","BMW i7","BMW i8",
+    "BMW M2","BMW M3","BMW M4","BMW M5","BMW M8"
+  ],
 
-let currentBrand = "Audi";
-let adminLogged = false;
+  "Mercedes": [
+    "Mercedes A-Class","Mercedes B-Class","Mercedes C-Class","Mercedes E-Class","Mercedes S-Class",
+    "Mercedes CLA","Mercedes CLS",
+    "Mercedes GLA","Mercedes GLB","Mercedes GLC","Mercedes GLE","Mercedes GLS",
+    "Mercedes G-Class",
+    "Mercedes SL","Mercedes AMG GT",
+    "Mercedes EQA","Mercedes EQB","Mercedes EQC","Mercedes EQE","Mercedes EQS"
+  ],
 
-function save() {
- localStorage.setItem("cars", JSON.stringify(cars));
-}
+  "Volkswagen": [
+    "Volkswagen Polo","Volkswagen Golf","Volkswagen Passat","Volkswagen Arteon",
+    "Volkswagen Jetta","Volkswagen Tiguan","Volkswagen Touareg","Volkswagen T-Roc",
+    "Volkswagen Taigo","Volkswagen Touran","Volkswagen Sharan",
+    "Volkswagen ID.3","Volkswagen ID.4","Volkswagen ID.5","Volkswagen ID.Buzz"
+  ],
+
+  "Toyota": [
+    "Toyota Yaris","Toyota Corolla","Toyota Camry","Toyota Avensis",
+    "Toyota Prius","Toyota C-HR","Toyota RAV4","Toyota Highlander",
+    "Toyota Land Cruiser","Toyota Hilux","Toyota Supra","Toyota GR86"
+  ],
+
+  "Ford": [
+    "Ford Fiesta","Ford Focus","Ford Mondeo","Ford Mustang",
+    "Ford Puma","Ford Kuga","Ford Edge","Ford Explorer",
+    "Ford Ranger","Ford Transit"
+  ],
+
+  "Honda": [
+    "Honda Jazz","Honda Civic","Honda Accord",
+    "Honda HR-V","Honda CR-V","Honda Pilot",
+    "Honda NSX","Honda e"
+  ],
+
+  "Hyundai": [
+    "Hyundai i10","Hyundai i20","Hyundai i30","Hyundai Elantra","Hyundai Sonata",
+    "Hyundai Kona","Hyundai Tucson","Hyundai Santa Fe",
+    "Hyundai Ioniq","Hyundai Ioniq 5","Hyundai Ioniq 6"
+  ],
+
+  "Kia": [
+    "Kia Picanto","Kia Rio","Kia Ceed","Kia Cerato","Kia Optima",
+    "Kia Stinger","Kia Sportage","Kia Sorento","Kia Telluride",
+    "Kia EV6","Kia EV9"
+  ],
+
+  "Porsche": [
+    "Porsche 718 Cayman","Porsche 718 Boxster",
+    "Porsche 911","Porsche Panamera",
+    "Porsche Macan","Porsche Cayenne",
+    "Porsche Taycan"
+  ]
+};
+
+const brands = Object.keys(data);
+let currentBrand = brands[0];
+
+const brandsBox = document.getElementById("brands");
+brands.forEach(b => {
+  const btn = document.createElement("button");
+  btn.innerText = b;
+  btn.onclick = () => showBrand(b);
+  brandsBox.appendChild(btn);
+});
 
 function showBrand(brand) {
- currentBrand = brand;
- render();
+  currentBrand = brand;
+  render();
 }
 
 function render() {
- const box = document.getElementById("cars");
- box.innerHTML = "";
- cars.filter(c=>c.brand===currentBrand).forEach((c,i)=>{
-   box.innerHTML += `
-   <div class="car">
-     <img src="${c.image}">
-     <div class="car-info">
-       <h4>${c.brand} ${c.model}</h4>
-       <p class="price">${c.price}</p>
-       ${adminLogged ? `<button onclick="removeCar(${i})">Fshi</button>` : ``}
-     </div>
-   </div>`;
- });
-}
-
-function addCar() {
- cars.push({
-   brand:brand.value,
-   model:model.value,
-   price:price.value,
-   image:image.value
- });
- save();
- render();
- alert("Makina u shtua");
-}
-
-function removeCar(i) {
- cars.splice(i,1);
- save();
- render();
-}
-
-function adminLogin() {
- const p = prompt("Shkruaj password-in e adminit:");
- if (p === ADMIN_PASSWORD) {
-   adminLogged = true;
-   document.getElementById("admin").style.display = "block";
-   render();
- } else {
-   alert("Password gabim");
- }
-}
-
-function logout() {
- adminLogged = false;
- document.getElementById("admin").style.display = "none";
- render();
+  const box = document.getElementById("cars");
+  box.innerHTML = "";
+  data[currentBrand].forEach((model, i) => {
+    box.innerHTML += `
+      <div class="car">
+        <img src="https://placehold.co/400x250?text=${currentBrand}">
+        <div class="car-info">
+          <b>${model}</b><br>
+          <span class="price">${20000 + i*1200} €</span>
+        </div>
+      </div>
+    `;
+  });
 }
 
 render();
 </script>
 
 </body>
-    <footer style="
-  background:#111;
-  color:#fff;
-  text-align:center;
-  padding:15px;
-  margin-top:20px;
-  font-size:14px;
-">
-  © 2026 Auto Market. Të gjitha të drejtat e rezervuara.
-</footer>
 </html>
