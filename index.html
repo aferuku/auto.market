@@ -1,112 +1,134 @@
 <!DOCTYPE html>
 <html lang="sq">
 <head>
-    <meta charset="UTF-8">
-    <title>Auto Market</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f4f4;
-        }
-        header {
-            background: #111;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .cars {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 20px;
-        }
-        .car {
-            background: white;
-            width: 300px;
-            margin: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .car img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-        .car-info {
-            padding: 15px;
-        }
-        .price {
-            color: green;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        footer {
-            background: #111;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            margin-top: 20px;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Auto Market</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f2f2f2;
+}
+header {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+.brands {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+}
+.brands img {
+    width: 80px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.brands img:hover {
+    transform: scale(1.1);
+}
+.cars {
+    display: none;
+    padding: 20px;
+}
+.cars.active {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.car {
+    background: white;
+    width: 280px;
+    margin: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.car img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+}
+.car-info {
+    padding: 15px;
+}
+.price {
+    color: green;
+    font-weight: bold;
+}
+</style>
+
+<script>
+function showBrand(brand) {
+    document.querySelectorAll('.cars').forEach(div => {
+        div.classList.remove('active');
+    });
+    document.getElementById(brand).classList.add('active');
+}
+</script>
 </head>
+
 <body>
 
 <header>
     <h1>Auto Market</h1>
-    <p>Shitje makinash të reja dhe të përdorura</p>
+    <p>Zgjidh markën e makinës</p>
 </header>
 
-<section class="cars">
+<!-- LOGOT -->
+<div class="brands">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Audi_Logo.svg" onclick="showBrand('audi')" alt="Audi">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" onclick="showBrand('bmw')" alt="BMW">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg" onclick="showBrand('mercedes')" alt="Mercedes">
+</div>
 
+<!-- AUDI -->
+<div class="cars active" id="audi">
     <div class="car">
-        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442" alt="BMW">
+        <img src="https://images.unsplash.com/photo-1617814076231-0d1a3a89ce11">
         <div class="car-info">
-            <h3>BMW X5 2019</h3>
-            <p>Naftë • Automatike • 120,000 km</p>
-            <p class="price">25,000 €</p>
-            <button>Kontakto shitësin</button>
+            <h3>Audi A4</h3>
+            <p>2020 • Benzinë</p>
+            <p class="price">18,000 €</p>
         </div>
     </div>
 
     <div class="car">
-        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70" alt="Audi">
+        <img src="https://images.unsplash.com/photo-1619767886558-efdc259cde1a">
         <div class="car-info">
-            <h3>Audi A4 2020</h3>
-            <p>Benzinë • Manuale • 80,000 km</p>
-            <p class="price">18,500 €</p>
-            <button>Kontakto shitësin</button>
+            <h3>Audi RS6</h3>
+            <p>2022 • Benzinë</p>
+            <p class="price">85,000 €</p>
         </div>
     </div>
+</div>
 
+<!-- BMW -->
+<div class="cars" id="bmw">
     <div class="car">
-        <img src="https://images.unsplash.com/photo-1617814076231-0d1a3a89ce11" alt="Mercedes">
+        <img src="https://images.unsplash.com/photo-1549924231-f129b911e442">
+        <div class="car-info">
+            <h3>BMW Serie 3</h3>
+            <p>2019 • Naftë</p>
+            <p class="price">20,000 €</p>
+        </div>
+    </div>
+</div>
+
+<!-- MERCEDES -->
+<div class="cars" id="mercedes">
+    <div class="car">
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70">
         <div class="car-info">
             <h3>Mercedes C Class</h3>
-            <p>Naftë • Automatike • 95,000 km</p>
-            <p class="price">22,000 €</p>
-            <button>Kontakto shitësin</button>
+            <p>2021 • Naftë</p>
+            <p class="price">24,000 €</p>
         </div>
     </div>
-
-</section>
-
-<footer>
-    <p>© 2026 Auto Market | Tel: +383 44 123 456</p>
-</footer>
+</div>
 
 </body>
 </html>
